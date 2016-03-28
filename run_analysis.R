@@ -33,7 +33,7 @@ runanalysis<-function(){
   features <- read.table("features.txt")
   names(features)<-c("featureID","feature")
   features$feature<-as.character(features$feature)
-  View(features)
+  #View(features)
   #Replacing names with tidy ones
   tidyFeatures<-data.frame(search_for = c("^t", "^f", "Acc", "Gyro", "Mag", "BodyBody"),
                            replace_with = c("time","frequency","Accelerometer","Gyroscope","Magnitude","Body"))
@@ -51,9 +51,11 @@ runanalysis<-function(){
   names(x.names)<-"names"
   x.names$cols_to_keep<-regexpr("[Mm]ean|[Ss]td|subject|activity",x.names$names) !=-1
   x<-x[,x.names$cols_to_keep]
+  write.table(x,file="tidyData.txt",row.names = F)
   
   #STAGE 5: Create a summary by activity and subject
   x.summary<-aggregate(.~subject + activity, x, mean)
   x.summary<-x.summary[order(x.summary$subject,x.summary$activity),]
   write.table(x.summary,file="summary-output.txt", row.names = F)
 }
+
